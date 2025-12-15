@@ -37,88 +37,178 @@
       top: 0;
       left: 0;
       right: 0;
-      height: 40px;
+      height: 60px;
       background: rgba(10, 6, 18, 0.98);
       backdrop-filter: blur(20px);
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 0 12px;
+      padding: 0 15px;
       z-index: 100;
       border-bottom: 1px solid rgba(255, 107, 157, 0.2);
     }
     
     .logo {
-      font-size: 14px;
+      font-size: 20px;
       font-weight: 900;
       background: linear-gradient(135deg, var(--primary), var(--secondary));
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
     
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
     .header-stats {
       display: flex;
-      gap: 6px;
-      font-size: 9px;
+      gap: 8px;
+      font-size: 13px;
     }
     
     .stat-badge {
       background: rgba(255, 255, 255, 0.1);
-      padding: 3px 7px;
-      border-radius: 6px;
+      padding: 5px 10px;
+      border-radius: 8px;
     }
     
     .stat-badge span { color: var(--primary); font-weight: 700; }
     
-    /* 필터 영역 */
-    .filter-section {
-      position: fixed;
-      top: 40px;
-      left: 0;
-      right: 0;
-      background: rgba(10, 6, 18, 0.95);
-      padding: 5px 8px;
-      z-index: 99;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-    }
-    
-    .filter-row {
+    .filter-toggle-btn {
+      background: rgba(255, 107, 157, 0.2);
+      border: 1px solid rgba(255, 107, 157, 0.4);
+      color: var(--primary);
+      padding: 8px 14px;
+      border-radius: 8px;
+      font-size: 14px;
+      cursor: pointer;
       display: flex;
       align-items: center;
-      gap: 4px;
-      margin-bottom: 4px;
-      flex-wrap: wrap;
+      gap: 5px;
     }
     
-    .filter-row:last-child { margin-bottom: 0; }
+    .filter-toggle-btn:active {
+      background: rgba(255, 107, 157, 0.4);
+    }
     
-    .filter-label {
-      font-size: 8px;
+    /* 필터 슬라이드 패널 */
+    .filter-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.7);
+      z-index: 200;
+    }
+    
+    .filter-overlay.active {
+      display: block;
+    }
+    
+    .filter-panel {
+      position: fixed;
+      top: 0;
+      right: -280px;
+      width: 280px;
+      height: 100%;
+      background: rgba(15, 10, 25, 0.98);
+      z-index: 201;
+      transition: right 0.3s ease;
+      display: flex;
+      flex-direction: column;
+      border-left: 1px solid rgba(255, 107, 157, 0.2);
+    }
+    
+    .filter-panel.active {
+      right: 0;
+    }
+    
+    .filter-panel-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 15px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .filter-panel-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text);
+    }
+    
+    .filter-close-btn {
+      background: none;
+      border: none;
       color: var(--text-muted);
-      padding: 2px 5px;
-      min-width: 28px;
+      font-size: 20px;
+      cursor: pointer;
+      padding: 5px;
+    }
+    
+    .filter-panel-body {
+      flex: 1;
+      overflow-y: auto;
+      padding: 10px 15px;
+    }
+    
+    .filter-section {
+      margin-bottom: 18px;
+    }
+    
+    .filter-search {
+      margin-bottom: 15px;
+    }
+    
+    .filter-search input {
+      width: 100%;
+      padding: 10px 12px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 8px;
+      color: var(--text);
+      font-size: 13px;
+      outline: none;
+    }
+    
+    .filter-search input::placeholder {
+      color: var(--text-muted);
+    }
+    
+    .filter-search input:focus {
+      border-color: var(--primary);
+      background: rgba(255, 107, 157, 0.1);
+    }
+    
+    .filter-section-title {
+      font-size: 11px;
       font-weight: 600;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
     }
     
     .filter-chips {
       display: flex;
-      gap: 3px;
+      gap: 6px;
       flex-wrap: wrap;
-      flex: 1;
     }
     
     .filter-chip {
-      padding: 2px 6px;
-      border-radius: 6px;
+      padding: 5px 10px;
+      border-radius: 8px;
       background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      font-size: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      font-size: 11px;
       cursor: pointer;
       transition: all 0.2s;
       white-space: nowrap;
       display: flex;
       align-items: center;
-      gap: 2px;
+      gap: 4px;
     }
     
     .filter-chip:hover {
@@ -133,15 +223,75 @@
     
     .filter-chip .count {
       background: rgba(0, 0, 0, 0.3);
-      padding: 0px 3px;
+      padding: 1px 5px;
       border-radius: 4px;
-      font-size: 7px;
+      font-size: 9px;
+    }
+    
+    .filter-panel-footer {
+      padding: 12px 15px;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .filter-reset-btn {
+      width: 100%;
+      padding: 10px;
+      background: rgba(255, 255, 255, 0.1);
+      border: none;
+      border-radius: 8px;
+      color: var(--text);
+      font-size: 12px;
+      cursor: pointer;
+    }
+    
+    .filter-reset-btn:active {
+      background: rgba(255, 255, 255, 0.2);
+    }
+    
+    /* 활성 필터 표시 (헤더 아래) */
+    .active-filters {
+      position: fixed;
+      top: 60px;
+      left: 0;
+      right: 0;
+      background: rgba(10, 6, 18, 0.95);
+      padding: 8px 15px;
+      z-index: 99;
+      display: none;
+      gap: 8px;
+      flex-wrap: wrap;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+    
+    .active-filters.show {
+      display: flex;
+    }
+    
+    .active-filter-tag {
+      background: rgba(255, 107, 157, 0.2);
+      border: 1px solid rgba(255, 107, 157, 0.3);
+      padding: 4px 10px;
+      border-radius: 12px;
+      font-size: 11px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      color: var(--primary);
+    }
+    
+    .active-filter-tag .remove {
+      cursor: pointer;
+      opacity: 0.7;
+    }
+    
+    .active-filter-tag .remove:hover {
+      opacity: 1;
     }
     
     /* 지도 컨테이너 */
     .map-container {
       position: fixed;
-      top: 125px;
+      top: 60px;
       left: 0;
       right: 0;
       bottom: 44px;
@@ -151,6 +301,10 @@
         radial-gradient(ellipse at center, rgba(255, 215, 0, 0.04) 0%, transparent 30%),
         radial-gradient(ellipse at center, rgba(255, 107, 157, 0.03) 0%, transparent 50%),
         var(--surface);
+    }
+    
+    .map-container.has-filters {
+      top: 95px;
     }
     
     .map-container:active { cursor: grabbing; }
@@ -505,10 +659,443 @@
       color: var(--text-muted);
       font-size: 8px;
       cursor: pointer;
+      padding: 5px 15px;
     }
     
     .nav-item.active { color: var(--primary); }
     .nav-item span:first-child { font-size: 16px; }
+    
+    /* 페이지 컨테이너 */
+    .page-container {
+      position: fixed;
+      top: 60px;
+      left: 0;
+      right: 0;
+      bottom: 44px;
+      background: var(--surface);
+      overflow-y: auto;
+    }
+    
+    .page-header {
+      padding: 15px;
+      font-size: 16px;
+      font-weight: 700;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      background: rgba(10, 6, 18, 0.95);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    
+    .page-content {
+      padding: 15px;
+    }
+    
+    /* 랭킹 리스트 */
+    .ranking-list {
+      padding: 10px;
+    }
+    
+    .ranking-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px;
+      background: rgba(255, 255, 255, 0.03);
+      border-radius: 10px;
+      margin-bottom: 8px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    
+    .ranking-item:active {
+      background: rgba(255, 107, 157, 0.1);
+    }
+    
+    .ranking-item.rank-gold {
+      background: linear-gradient(135deg, rgba(255, 215, 0, 0.15), rgba(255, 215, 0, 0.05));
+      border: 1px solid rgba(255, 215, 0, 0.3);
+    }
+    
+    .ranking-item.rank-silver {
+      background: linear-gradient(135deg, rgba(192, 192, 192, 0.15), rgba(192, 192, 192, 0.05));
+      border: 1px solid rgba(192, 192, 192, 0.3);
+    }
+    
+    .ranking-item.rank-bronze {
+      background: linear-gradient(135deg, rgba(205, 127, 50, 0.15), rgba(205, 127, 50, 0.05));
+      border: 1px solid rgba(205, 127, 50, 0.3);
+    }
+    
+    .ranking-rank {
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: 800;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+      color: var(--text-muted);
+    }
+    
+    .rank-gold .ranking-rank { background: var(--gold); color: #000; }
+    .rank-silver .ranking-rank { background: var(--silver); color: #000; }
+    .rank-bronze .ranking-rank { background: var(--bronze); color: #fff; }
+    
+    .ranking-info {
+      flex: 1;
+    }
+    
+    .ranking-name {
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 2px;
+    }
+    
+    .ranking-meta {
+      font-size: 10px;
+      color: var(--text-muted);
+    }
+    
+    .ranking-score {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--primary);
+    }
+    
+    /* 빈 상태 */
+    .empty-state {
+      text-align: center;
+      padding: 60px 20px;
+    }
+    
+    .empty-icon {
+      font-size: 48px;
+      margin-bottom: 15px;
+    }
+    
+    .empty-text {
+      color: var(--text-muted);
+      font-size: 13px;
+      margin-bottom: 20px;
+    }
+    
+    .primary-btn {
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      border: none;
+      padding: 12px 24px;
+      border-radius: 10px;
+      color: #fff;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    
+    /* 프로필 */
+    .profile-card {
+      text-align: center;
+      padding: 30px;
+      background: rgba(255, 255, 255, 0.03);
+      border-radius: 15px;
+      margin-bottom: 20px;
+    }
+    
+    .profile-avatar {
+      width: 70px;
+      height: 70px;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 32px;
+      margin: 0 auto 12px;
+    }
+    
+    .profile-name {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+    
+    .profile-id {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+    
+    .menu-list {
+      background: rgba(255, 255, 255, 0.03);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    
+    .menu-item {
+      padding: 15px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      font-size: 13px;
+      cursor: pointer;
+    }
+    
+    .menu-item:last-child {
+      border-bottom: none;
+    }
+    
+    .menu-item:active {
+      background: rgba(255, 107, 157, 0.1);
+    }
+    
+    /* 내상점 페이지 스타일 */
+    .shop-status-card {
+      background: linear-gradient(135deg, rgba(255, 107, 157, 0.15), rgba(168, 85, 247, 0.15));
+      border: 1px solid rgba(255, 107, 157, 0.3);
+      border-radius: 15px;
+      padding: 18px;
+      margin-bottom: 20px;
+    }
+    
+    .shop-status-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 15px;
+    }
+    
+    .shop-status-icon {
+      width: 50px;
+      height: 50px;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+    }
+    
+    .shop-status-info {
+      flex: 1;
+    }
+    
+    .shop-status-name {
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 3px;
+    }
+    
+    .shop-status-category {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+    
+    .shop-status-rank {
+      text-align: center;
+      background: rgba(255, 215, 0, 0.2);
+      padding: 8px 12px;
+      border-radius: 10px;
+    }
+    
+    .rank-number {
+      font-size: 22px;
+      font-weight: 800;
+      color: var(--gold);
+    }
+    
+    .rank-label {
+      font-size: 10px;
+      color: var(--text-muted);
+    }
+    
+    .shop-status-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+    
+    .status-stat {
+      text-align: center;
+      background: rgba(0, 0, 0, 0.2);
+      padding: 10px;
+      border-radius: 8px;
+    }
+    
+    .status-stat-value {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text);
+    }
+    
+    .status-stat-label {
+      font-size: 9px;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+    
+    .shop-menu-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    
+    .shop-menu-item {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      padding: 18px;
+      text-align: center;
+      cursor: pointer;
+    }
+    
+    .shop-menu-item:active {
+      background: rgba(255, 107, 157, 0.15);
+      border-color: rgba(255, 107, 157, 0.3);
+    }
+    
+    .shop-menu-icon {
+      font-size: 28px;
+      margin-bottom: 8px;
+    }
+    
+    .shop-menu-text {
+      font-size: 12px;
+      color: var(--text);
+    }
+    
+    .recent-activity {
+      background: rgba(255, 255, 255, 0.03);
+      border-radius: 12px;
+      padding: 15px;
+    }
+    
+    .section-title {
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 12px;
+      color: var(--text);
+    }
+    
+    .activity-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+    
+    .activity-item:last-child {
+      border-bottom: none;
+    }
+    
+    .activity-icon {
+      width: 32px;
+      height: 32px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+    }
+    
+    .activity-info {
+      flex: 1;
+    }
+    
+    .activity-text {
+      font-size: 12px;
+      color: var(--text);
+    }
+    
+    .activity-time {
+      font-size: 10px;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+    
+    /* 프로필 페이지 스타일 개선 */
+    .profile-badges {
+      margin-top: 10px;
+    }
+    
+    .profile-badge {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 12px;
+      font-size: 10px;
+      font-weight: 600;
+    }
+    
+    .profile-badge.vip {
+      background: linear-gradient(135deg, rgba(255, 215, 0, 0.3), rgba(255, 165, 0, 0.3));
+      color: var(--gold);
+      border: 1px solid rgba(255, 215, 0, 0.5);
+    }
+    
+    .profile-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    
+    .profile-stat {
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 12px;
+      padding: 15px 10px;
+      text-align: center;
+    }
+    
+    .profile-stat-value {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--primary);
+    }
+    
+    .profile-stat-label {
+      font-size: 10px;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+    
+    .menu-item {
+      display: flex;
+      align-items: center;
+      padding: 15px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      font-size: 13px;
+      cursor: pointer;
+    }
+    
+    .menu-icon {
+      margin-right: 12px;
+      font-size: 16px;
+    }
+    
+    .menu-text {
+      flex: 1;
+    }
+    
+    .menu-arrow {
+      color: var(--text-muted);
+      font-size: 16px;
+    }
+    
+    .logout-btn {
+      margin-top: 20px;
+      padding: 15px;
+      text-align: center;
+      background: rgba(255, 100, 100, 0.1);
+      border: 1px solid rgba(255, 100, 100, 0.3);
+      border-radius: 12px;
+      color: #ff6b6b;
+      font-size: 13px;
+      cursor: pointer;
+    }
+    
+    .logout-btn:active {
+      background: rgba(255, 100, 100, 0.2);
+    }
     
     /* 모달 */
     .modal-overlay {
@@ -679,24 +1266,49 @@
 
   <header class="header">
     <div class="logo">🔺 광장</div>
-    <div class="header-stats">
-      <div class="stat-badge">전체 <span id="totalCount">0</span></div>
-      <div class="stat-badge">표시 <span id="currentCount">0</span></div>
+    <div class="header-right">
+      <div class="header-stats">
+        <div class="stat-badge">전체 <span id="totalCount">0</span></div>
+        <div class="stat-badge">표시 <span id="currentCount">0</span></div>
+      </div>
+      <button class="filter-toggle-btn" onclick="toggleFilterPanel()">
+        ⚙️ 필터
+      </button>
     </div>
   </header>
   
-  <div class="filter-section">
-    <div class="filter-row">
-      <span class="filter-label">등급</span>
-      <div class="filter-chips" id="gradeFilters"></div>
+  <!-- 활성 필터 표시 -->
+  <div class="active-filters" id="activeFilters"></div>
+  
+  <!-- 필터 오버레이 -->
+  <div class="filter-overlay" id="filterOverlay" onclick="closeFilterPanel()"></div>
+  
+  <!-- 필터 슬라이드 패널 -->
+  <div class="filter-panel" id="filterPanel">
+    <div class="filter-panel-header">
+      <div class="filter-panel-title">🔍 필터</div>
+      <button class="filter-close-btn" onclick="closeFilterPanel()">✕</button>
     </div>
-    <div class="filter-row">
-      <span class="filter-label">모임</span>
-      <div class="filter-chips" id="guildFilters"></div>
+    <div class="filter-panel-body">
+      <!-- 검색창 -->
+      <div class="filter-search">
+        <input type="text" id="searchInput" placeholder="🔍 업체명 검색..." oninput="handleSearch(this.value)">
+      </div>
+      <div class="filter-section">
+        <div class="filter-section-title">🏆 등급</div>
+        <div class="filter-chips" id="gradeFilters"></div>
+      </div>
+      <div class="filter-section">
+        <div class="filter-section-title">👥 모임</div>
+        <div class="filter-chips" id="guildFilters"></div>
+      </div>
+      <div class="filter-section">
+        <div class="filter-section-title">📂 분야</div>
+        <div class="filter-chips" id="categoryFilters"></div>
+      </div>
     </div>
-    <div class="filter-row">
-      <span class="filter-label">분야</span>
-      <div class="filter-chips" id="categoryFilters"></div>
+    <div class="filter-panel-footer">
+      <button class="filter-reset-btn" onclick="resetFilters()">🔄 필터 초기화</button>
     </div>
   </div>
   
@@ -716,6 +1328,169 @@
     <div class="info-item">줌 <span id="zoomLevel">100%</span></div>
   </div>
   
+  <!-- 랭킹 페이지 -->
+  <div class="page-container" id="rankingPage" style="display: none;">
+    <div class="page-header">🏆 랭킹 TOP 100</div>
+    <div class="ranking-list" id="rankingList"></div>
+  </div>
+  
+  <!-- 내상점 페이지 -->
+  <div class="page-container" id="myshopPage" style="display: none;">
+    <div class="page-header">🏪 내 상점</div>
+    <div class="page-content">
+      <!-- 상점 현황 카드 -->
+      <div class="shop-status-card">
+        <div class="shop-status-header">
+          <div class="shop-status-icon">🏪</div>
+          <div class="shop-status-info">
+            <div class="shop-status-name">프리미엄센터</div>
+            <div class="shop-status-category">📢 마케팅</div>
+          </div>
+          <div class="shop-status-rank">
+            <div class="rank-number">15</div>
+            <div class="rank-label">위</div>
+          </div>
+        </div>
+        <div class="shop-status-stats">
+          <div class="status-stat">
+            <div class="status-stat-value">1,234</div>
+            <div class="status-stat-label">점수</div>
+          </div>
+          <div class="status-stat">
+            <div class="status-stat-value">💎</div>
+            <div class="status-stat-label">다이아</div>
+          </div>
+          <div class="status-stat">
+            <div class="status-stat-value">↑3</div>
+            <div class="status-stat-label">순위변동</div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- 메뉴 버튼들 -->
+      <div class="shop-menu-grid">
+        <div class="shop-menu-item">
+          <div class="shop-menu-icon">✏️</div>
+          <div class="shop-menu-text">정보 수정</div>
+        </div>
+        <div class="shop-menu-item">
+          <div class="shop-menu-icon">📢</div>
+          <div class="shop-menu-text">홍보글 작성</div>
+        </div>
+        <div class="shop-menu-item">
+          <div class="shop-menu-icon">📊</div>
+          <div class="shop-menu-text">통계 보기</div>
+        </div>
+        <div class="shop-menu-item">
+          <div class="shop-menu-icon">👥</div>
+          <div class="shop-menu-text">모임 관리</div>
+        </div>
+      </div>
+      
+      <!-- 최근 활동 -->
+      <div class="recent-activity">
+        <div class="section-title">📋 최근 활동</div>
+        <div class="activity-item">
+          <div class="activity-icon">👁️</div>
+          <div class="activity-info">
+            <div class="activity-text">프로필 조회 +15회</div>
+            <div class="activity-time">오늘</div>
+          </div>
+        </div>
+        <div class="activity-item">
+          <div class="activity-icon">⬆️</div>
+          <div class="activity-info">
+            <div class="activity-text">순위 상승 18위 → 15위</div>
+            <div class="activity-time">어제</div>
+          </div>
+        </div>
+        <div class="activity-item">
+          <div class="activity-icon">💎</div>
+          <div class="activity-info">
+            <div class="activity-text">다이아 등급 달성!</div>
+            <div class="activity-time">3일 전</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- 프로필 페이지 -->
+  <div class="page-container" id="profilePage" style="display: none;">
+    <div class="page-header">👤 프로필</div>
+    <div class="page-content">
+      <!-- 프로필 카드 -->
+      <div class="profile-card">
+        <div class="profile-avatar">👤</div>
+        <div class="profile-name">홍길동</div>
+        <div class="profile-id">@username</div>
+        <div class="profile-badges">
+          <span class="profile-badge vip">👑 VIP 회원</span>
+        </div>
+      </div>
+      
+      <!-- 통계 -->
+      <div class="profile-stats">
+        <div class="profile-stat">
+          <div class="profile-stat-value">5,000</div>
+          <div class="profile-stat-label">💰 포인트</div>
+        </div>
+        <div class="profile-stat">
+          <div class="profile-stat-value">2</div>
+          <div class="profile-stat-label">🏪 내 상점</div>
+        </div>
+        <div class="profile-stat">
+          <div class="profile-stat-value">128</div>
+          <div class="profile-stat-label">📅 활동일</div>
+        </div>
+      </div>
+      
+      <!-- 메뉴 -->
+      <div class="menu-list">
+        <div class="menu-item">
+          <span class="menu-icon">💳</span>
+          <span class="menu-text">포인트 충전</span>
+          <span class="menu-arrow">›</span>
+        </div>
+        <div class="menu-item">
+          <span class="menu-icon">📜</span>
+          <span class="menu-text">결제 내역</span>
+          <span class="menu-arrow">›</span>
+        </div>
+        <div class="menu-item">
+          <span class="menu-icon">🔔</span>
+          <span class="menu-text">알림 설정</span>
+          <span class="menu-arrow">›</span>
+        </div>
+        <div class="menu-item">
+          <span class="menu-icon">⚙️</span>
+          <span class="menu-text">설정</span>
+          <span class="menu-arrow">›</span>
+        </div>
+      </div>
+      
+      <div class="menu-list" style="margin-top: 15px;">
+        <div class="menu-item">
+          <span class="menu-icon">📢</span>
+          <span class="menu-text">공지사항</span>
+          <span class="menu-arrow">›</span>
+        </div>
+        <div class="menu-item">
+          <span class="menu-icon">❓</span>
+          <span class="menu-text">도움말</span>
+          <span class="menu-arrow">›</span>
+        </div>
+        <div class="menu-item">
+          <span class="menu-icon">💬</span>
+          <span class="menu-text">문의하기</span>
+          <span class="menu-arrow">›</span>
+        </div>
+      </div>
+      
+      <div class="logout-btn">🚪 로그아웃</div>
+    </div>
+  </div>
+  
   <div class="controls">
     <button class="ctrl-btn" onclick="zoomIn()">+</button>
     <button class="ctrl-btn" onclick="zoomOut()">−</button>
@@ -723,11 +1498,10 @@
   </div>
   
   <nav class="bottom-nav">
-    <div class="nav-item active"><span>🔺</span><span>피라미드</span></div>
-    <div class="nav-item"><span>🏆</span><span>랭킹</span></div>
-    <div class="nav-item"><span>🔍</span><span>검색</span></div>
-    <div class="nav-item"><span>🏪</span><span>내상점</span></div>
-    <div class="nav-item"><span>👤</span><span>프로필</span></div>
+    <div class="nav-item active" onclick="showPage('pyramid')"><span>🔺</span><span>피라미드</span></div>
+    <div class="nav-item" onclick="showPage('ranking')"><span>🏆</span><span>랭킹</span></div>
+    <div class="nav-item" onclick="showPage('myshop')"><span>🏪</span><span>내상점</span></div>
+    <div class="nav-item" onclick="showPage('profile')"><span>👤</span><span>프로필</span></div>
   </nav>
   
   <div class="modal-overlay" id="modal" onclick="closeModal(event)">
@@ -1019,6 +1793,11 @@
     function applyFilters() {
       let filtered = [...allCompanies];
       
+      // 검색어 필터
+      if (searchQuery) {
+        filtered = filtered.filter(c => c.name.toLowerCase().includes(searchQuery));
+      }
+      
       if (currentFilters.grade !== 'all') {
         filtered = filtered.filter(c => c.grade === currentFilters.grade);
       }
@@ -1037,6 +1816,7 @@
       
       displayedCompanies = filtered.sort((a, b) => b.score - a.score);
       renderShops(displayedCompanies);
+      updateActiveFiltersDisplay();
       
       if (currentFilters.grade !== 'all' || currentFilters.guild !== 'all' || currentFilters.category !== 'all') {
         autoZoomToFit(displayedCompanies.length);
@@ -1236,6 +2016,146 @@
       if (e.target.id === 'modal') {
         document.getElementById('modal').classList.remove('active');
       }
+    }
+    
+    // ============================================
+    // 검색 기능
+    // ============================================
+    
+    let searchQuery = '';
+    
+    function handleSearch(query) {
+      searchQuery = query.trim().toLowerCase();
+      applyFilters();
+    }
+    
+    // ============================================
+    // 페이지 전환
+    // ============================================
+    
+    let currentPage = 'pyramid';
+    
+    function showPage(page) {
+      currentPage = page;
+      
+      // 네비게이션 활성화
+      document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+      event.currentTarget.classList.add('active');
+      
+      // 페이지별 표시
+      document.getElementById('mapContainer').style.display = page === 'pyramid' ? 'block' : 'none';
+      document.getElementById('rankingPage').style.display = page === 'ranking' ? 'block' : 'none';
+      document.getElementById('myshopPage').style.display = page === 'myshop' ? 'block' : 'none';
+      document.getElementById('profilePage').style.display = page === 'profile' ? 'block' : 'none';
+      
+      // 컨트롤 표시
+      document.querySelector('.controls').style.display = page === 'pyramid' ? 'flex' : 'none';
+      document.querySelector('.info-panel').style.display = page === 'pyramid' ? 'block' : 'none';
+      
+      if (page === 'ranking') {
+        renderRanking();
+      }
+    }
+    
+    // ============================================
+    // 랭킹 페이지 (1~100위)
+    // ============================================
+    
+    function renderRanking() {
+      const container = document.getElementById('rankingList');
+      const top100 = [...allCompanies].sort((a, b) => b.score - a.score).slice(0, 100);
+      
+      let html = '';
+      top100.forEach((company, index) => {
+        const rank = index + 1;
+        const grade = GRADES[company.grade];
+        const cat = CATEGORIES[company.category];
+        
+        let rankClass = '';
+        if (rank === 1) rankClass = 'rank-gold';
+        else if (rank === 2) rankClass = 'rank-silver';
+        else if (rank === 3) rankClass = 'rank-bronze';
+        
+        html += `
+          <div class="ranking-item ${rankClass}" onclick="openModal(allCompanies.find(c => c.id === ${company.id}), ${rank})">
+            <div class="ranking-rank">${rank}</div>
+            <div class="ranking-info">
+              <div class="ranking-name">${company.name}</div>
+              <div class="ranking-meta">${cat.icon} ${cat.name} · ${grade.badge} ${grade.name}</div>
+            </div>
+            <div class="ranking-score">${company.score.toLocaleString()}</div>
+          </div>
+        `;
+      });
+      
+      container.innerHTML = html;
+    }
+    
+    // ============================================
+    // 필터 패널 제어
+    // ============================================
+    
+    function toggleFilterPanel() {
+      document.getElementById('filterPanel').classList.toggle('active');
+      document.getElementById('filterOverlay').classList.toggle('active');
+    }
+    
+    function closeFilterPanel() {
+      document.getElementById('filterPanel').classList.remove('active');
+      document.getElementById('filterOverlay').classList.remove('active');
+    }
+    
+    function resetFilters() {
+      currentFilters = { grade: 'all', guild: 'all', category: 'all' };
+      document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+      document.querySelectorAll('[data-value="all"]').forEach(c => c.classList.add('active'));
+      displayedCompanies = [...allCompanies];
+      renderShops(displayedCompanies);
+      updateActiveFiltersDisplay();
+      closeFilterPanel();
+      resetView();
+    }
+    
+    function updateActiveFiltersDisplay() {
+      const container = document.getElementById('activeFilters');
+      const mapContainer = document.getElementById('mapContainer');
+      let tags = [];
+      
+      if (currentFilters.grade !== 'all') {
+        const grade = GRADES[currentFilters.grade];
+        tags.push(`<span class="active-filter-tag">${grade.badge} ${grade.name} <span class="remove" onclick="removeFilter('grade')">✕</span></span>`);
+      }
+      
+      if (currentFilters.guild !== 'all') {
+        if (currentFilters.guild === 'none') {
+          tags.push(`<span class="active-filter-tag">무소속 <span class="remove" onclick="removeFilter('guild')">✕</span></span>`);
+        } else {
+          const guild = GUILDS[currentFilters.guild];
+          tags.push(`<span class="active-filter-tag">${guild.icon} ${guild.name} <span class="remove" onclick="removeFilter('guild')">✕</span></span>`);
+        }
+      }
+      
+      if (currentFilters.category !== 'all') {
+        const cat = CATEGORIES[currentFilters.category];
+        tags.push(`<span class="active-filter-tag">${cat.icon} ${cat.name} <span class="remove" onclick="removeFilter('category')">✕</span></span>`);
+      }
+      
+      if (tags.length > 0) {
+        container.innerHTML = tags.join('');
+        container.classList.add('show');
+        mapContainer.classList.add('has-filters');
+      } else {
+        container.innerHTML = '';
+        container.classList.remove('show');
+        mapContainer.classList.remove('has-filters');
+      }
+    }
+    
+    function removeFilter(type) {
+      currentFilters[type] = 'all';
+      document.querySelectorAll(`[data-type="${type}"]`).forEach(c => c.classList.remove('active'));
+      document.querySelector(`[data-type="${type}"][data-value="all"]`).classList.add('active');
+      applyFilters();
     }
     
     // ============================================
