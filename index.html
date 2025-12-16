@@ -1962,23 +1962,48 @@
     mapContainer.addEventListener('mouseup', () => isDragging = false);
     mapContainer.addEventListener('mouseleave', () => isDragging = false);
     
+    // 터치 이벤트는 핀치 줌에서 통합 처리
+    mapContainer.addEventListener('touchend', () => isDragging = false);
+    
+    // 핀치 줌 (두 손가락 확대/축소)
+    let initialPinchDistance = 0;
+    let initialScale = 1;
+    
     mapContainer.addEventListener('touchstart', (e) => {
-      isDragging = true;
-      startX = e.touches[0].clientX - translateX;
-      startY = e.touches[0].clientY - translateY;
+      if (e.touches.length === 2) {
+        // 두 손가락 터치 시작
+        initialPinchDistance = getPinchDistance(e.touches);
+        initialScale = scale;
+        isDragging = false;
+      } else if (e.touches.length === 1) {
+        isDragging = true;
+        startX = e.touches[0].clientX - translateX;
+        startY = e.touches[0].clientY - translateY;
+      }
     });
     
     mapContainer.addEventListener('touchmove', (e) => {
-      if (!isDragging) return;
-      e.preventDefault();
-      translateX = e.touches[0].clientX - startX;
-      translateY = e.touches[0].clientY - startY;
-      updateTransform();
+      if (e.touches.length === 2) {
+        // 핀치 줌
+        e.preventDefault();
+        const currentDistance = getPinchDistance(e.touches);
+        const pinchRatio = currentDistance / initialPinchDistance;
+        scale = Math.min(Math.max(initialScale * pinchRatio, 0.3), 3);
+        updateTransform();
+      } else if (e.touches.length === 1 && isDragging) {
+        // 드래그
+        e.preventDefault();
+        translateX = e.touches[0].clientX - startX;
+        translateY = e.touches[0].clientY - startY;
+        updateTransform();
+      }
     }, { passive: false });
     
-    mapContainer.addEventListener('touchend', () => isDragging = false);
-    
-    mapContainer.addEventListener('wheel', (e) => {
+    function getPinchDistance(touches) {
+      const dx = touches[0].clientX - touches[1].clientX;
+      const dy = touches[0].clientY - touches[1].clientY;
+      return Math.sqrt(dx * dx + dy * dy);
+    }
       e.preventDefault();
       if (e.deltaY < 0) zoomIn();
       else zoomOut();
